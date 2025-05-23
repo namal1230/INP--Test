@@ -21,13 +21,19 @@ public class Servers {
 
     // This is a method create Socket
     public void makeSocket() throws IOException {
-        ServerSocket serverSocket = new ServerSocket(5006);
-        Socket socket = serverSocket.accept();
-        System.out.println("Server Started");
-        Controller.ClientHandler clientHandler = new Controller.ClientHandler(this, socket);
-        clients.add(clientHandler);
+        new Thread(()->{
+            try {
+                ServerSocket serverSocket = new ServerSocket(5006);
+                Socket socket = serverSocket.accept();
+                System.out.println("Server Started");
+                Controller.ClientHandler clientHandler = new Controller.ClientHandler(this, socket);
+                clients.add(clientHandler);
+                new Thread(clientHandler).start();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }).start();
 
-        new Thread(clientHandler).start();
 
     }
 
